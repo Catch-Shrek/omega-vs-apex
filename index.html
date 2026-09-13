@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Omega vs Apex - OVA</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <!-- HOME SCREEN -->
+    <div id="homeScreen" class="screen active">
+        <div class="home-container">
+            <div class="logo-section">
+                <h1 class="game-title">OMEGA vs APEX</h1>
+                <p class="game-subtitle">OVA - The Ultimate Fighting Game</p>
+            </div>
+            
+            <div class="characters-display">
+                <div class="team omega-team">
+                    <div class="team-name">OMEGA</div>
+                    <div class="character-preview" id="omegaPreview"></div>
+                </div>
+                
+                <div class="vs-text">VS</div>
+                
+                <div class="team apex-team">
+                    <div class="team-name">APEX</div>
+                    <div class="character-preview" id="apexPreview"></div>
+                </div>
+            </div>
+            
+            <button class="golden-button start-game-btn" onclick="goToModeSelect()">START GAME</button>
+        </div>
+    </div>
+
+    <!-- MODE SELECT SCREEN -->
+    <div id="modeSelectScreen" class="screen">
+        <div class="mode-select-container">
+            <h2>SELECT GAME MODE</h2>
+            
+            <div class="mode-buttons">
+                <button class="mode-button pve-button" onclick="goToCPUMode()">
+                    <div class="mode-icon">🤖</div>
+                    <div class="mode-text">Player vs CPU</div>
+                </button>
+                
+                <button class="mode-button pvp-button" onclick="goToPVPMode()">
+                    <div class="mode-icon">👥</div>
+                    <div class="mode-text">Player vs Player</div>
+                </button>
+            </div>
+            
+            <button class="back-button" onclick="goHome()">← BACK</button>
+        </div>
+    </div>
+
+    <!-- RANK SCREEN (CPU MODE) -->
+    <div id="rankScreen" class="screen">
+        <div class="rank-container">
+            <div class="rank-header">
+                <h2>RANK PROGRESSION</h2>
+                <button class="close-button" onclick="closeRankScreen()">✕</button>
+            </div>
+            
+            <div class="rank-display">
+                <div class="current-rank">
+                    <div class="rank-symbol" id="rankSymbol"></div>
+                    <div class="rank-info">
+                        <div class="rank-name" id="rankName">BRONZE</div>
+                        <div class="rank-percentage" id="rankPercentage">0%</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="progression-info">
+                <div class="rank-item">
+                    <span class="rank-symbol-small">🥉</span>
+                    <span>BRONZE</span>
+                </div>
+                <div class="rank-item">
+                    <span class="rank-symbol-small">⚪</span>
+                    <span>SILVER</span>
+                </div>
+                <div class="rank-item">
+                    <span class="rank-symbol-small">🟡</span>
+                    <span>GOLD</span>
+                </div>
+                <div class="rank-item">
+                    <span class="rank-symbol-small">💎</span>
+                    <span>DIAMOND</span>
+                </div>
+                <div class="rank-item">
+                    <span class="rank-symbol-small">🟢</span>
+                    <span>EMERALD</span>
+                </div>
+                <div class="rank-item">
+                    <span class="rank-symbol-small">🔴</span>
+                    <span>RUBY</span>
+                </div>
+                <div class="rank-item">
+                    <span class="rank-symbol-small">👑</span>
+                    <span>DIAMOND LEGEND</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CPU MODE HOME SCREEN -->
+    <div id="cpuModeScreen" class="screen">
+        <div class="cpu-mode-container">
+            <div class="mode-header">
+                <h2>PLAYER vs CPU</h2>
+                <button class="info-button" onclick="openRankScreen()">📊 RANK</button>
+            </div>
+            
+            <div class="golden-play-button-container">
+                <button class="golden-play-button" onclick="goToCharacterSelect('cpu')">
+                    <div class="play-button-content">▶</div>
+                </button>
+            </div>
+            
+            <button class="back-button" onclick="goToModeSelect()">← BACK</button>
+        </div>
+    </div>
+
+    <!-- CHARACTER SELECT SCREEN -->
+    <div id="characterSelectScreen" class="screen">
+        <div class="character-select-container">
+            <div class="select-header">
+                <h2>SELECT YOUR CHARACTER</h2>
+                <div class="mode-indicator" id="modeIndicator">PLAYER vs CPU</div>
+            </div>
+            
+            <div class="character-select-area">
+                <div class="team-selector">
+                    <div class="team-label">OMEGA</div>
+                    <div class="character-grid" id="omegaGrid"></div>
+                </div>
+                
+                <div class="vs-separator">VS</div>
+                
+                <div class="team-selector">
+                    <div class="team-label">APEX</div>
+                    <div class="character-grid" id="apexGrid"></div>
+                </div>
+            </div>
+            
+            <div class="character-preview-section">
+                <div id="characterPreview3D"></div>
+                <div class="character-stats" id="characterStats"></div>
+            </div>
+            
+            <button class="golden-button start-battle-btn" id="startBattleBtn" onclick="startBattle()" disabled>START GAME</button>
+            <button class="back-button" onclick="goToCPUMode()">← BACK</button>
+        </div>
+    </div>
+
+    <!-- BATTLE SCREEN -->
+    <div id="battleScreen" class="screen">
+        <div class="battle-container">
+            <div class="battle-area">
+                <div class="player-side">
+                    <div class="character-name" id="player1Name"></div>
+                    <div class="hp-bar-container">
+                        <div class="hp-bar" id="player1HPBar">
+                            <div class="hp-fill" id="player1HPFill"></div>
+                        </div>
+                        <span class="hp-text" id="player1HPText">250/250</span>
+                    </div>
+                    <div id="player1Model"></div>
+                </div>
+                
+                <div class="battle-info">
+                    <div class="turn-indicator" id="turnIndicator">YOUR TURN</div>
+                    <div class="battle-log" id="battleLog"></div>
+                </div>
+                
+                <div class="enemy-side">
+                    <div class="character-name" id="player2Name"></div>
+                    <div class="hp-bar-container">
+                        <div class="hp-bar" id="player2HPBar">
+                            <div class="hp-fill" id="player2HPFill"></div>
+                        </div>
+                        <span class="hp-text" id="player2HPText">250/250</span>
+                    </div>
+                    <div id="player2Model"></div>
+                </div>
+            </div>
+            
+            <div class="action-panel" id="actionPanel"></div>
+        </div>
+    </div>
+
+    <!-- GAME OVER SCREEN -->
+    <div id="gameOverScreen" class="screen">
+        <div class="game-over-container">
+            <div class="result-display" id="resultDisplay"></div>
+            <div class="game-over-info" id="gameOverInfo"></div>
+            <button class="golden-button" onclick="backToModeAfterGame()">CONTINUE</button>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
